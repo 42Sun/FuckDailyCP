@@ -14,7 +14,7 @@ from Crypto.Cipher import AES
 
 
 class DailyCP:
-    def __init__(self, schoolName="安徽理工大学"):
+    def __init__(self, schoolName="太原理工大学"):
         self.key = "ST83=@XV"  # dynamic when app update
         self.session = requests.session()
         self.host = ""
@@ -108,10 +108,9 @@ class DailyCP:
         return self.request("https://{host}/iap/tenant/basicInfo", "{}")
 
     def login(self, username, password, captcha=""):
-        if "campusphere" in self.loginUrl:
-            return self.loginIAP(username, password, captcha)
-        else:
-            return self.loginAuthserver(username, password, captcha)
+        return self.loginIAP(username, password, captcha)
+        # else:
+        #     return self.loginAuthserver(username, password, captcha)
 
     def loginIAP(self, username, password, captcha=""):
         self.session.headers.update({"X-Requested-With": "XMLHttpRequest"})
