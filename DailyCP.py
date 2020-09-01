@@ -242,39 +242,39 @@ class DailyCP:
 
             formpath = "{dbpath}/{charac}.json".format(
                 charac=self.getFormCharac(item), dbpath=dbpath)
-#             if os.path.exists(formpath):
-            with open(formpath, "rb") as file:
-                def find(l, key_valueList: list):
-                    for item in l:
-                        b = True
-                        for k_v in key_valueList:
-                            if item[k_v[0]] != k_v[1]:
-                                b = False
-                        if b:
-                            return item
-                    return None
+            if os.path.exists(formpath):
+                with open(formpath, "rb") as file:
+                    def find(l, key_valueList: list):
+                        for item in l:
+                            b = True
+                            for k_v in key_valueList:
+                                if item[k_v[0]] != k_v[1]:
+                                    b = False
+                            if b:
+                                return item
+                        return None
 
-                newForm = form
-                form = json.loads(file.read().decode("utf-8"))
-                for item in newForm:
-                    l = find(form, [['title', item['title']], [
-                             'description', item['description']]])
-                    item['value'] = l['value']
-                    for fieldItemsList in item['fieldItems']:
-                        field = find(l['fieldItems'], [
-                            ['content', fieldItemsList['content']]])
-                        fieldItemsList['isSelected'] = field['isSelected']
-                form = newForm
-                self.autoFill(form)
+                    newForm = form
+                    form = json.loads(file.read().decode("utf-8"))
+                    for item in newForm:
+                        l = find(form, [['title', item['title']], [
+                                 'description', item['description']]])
+                        item['value'] = l['value']
+                        for fieldItemsList in item['fieldItems']:
+                            field = find(l['fieldItems'], [
+                                ['content', fieldItemsList['content']]])
+                            fieldItemsList['isSelected'] = field['isSelected']
+                    form = newForm
+                    self.autoFill(form)
 
-            self.submitCollectorForm(detail["collector"]["formWid"], detail["collector"]
-                                     ["wid"], detail["collector"]["schoolTaskWid"], form, address)
-#             else:
-            with open(formpath, "wb") as file:
-                file.write(json.dumps(
-                    form, ensure_ascii=False).encode("utf-8"))
-                print("请手动填写{formpath}，之后重新运行脚本".format(formpath=formpath))
-                exit()
+                self.submitCollectorForm(detail["collector"]["formWid"], detail["collector"]
+                                         ["wid"], detail["collector"]["schoolTaskWid"], form, address)
+            else:
+                with open(formpath, "wb") as file:
+                    file.write(json.dumps(
+                        form, ensure_ascii=False).encode("utf-8"))
+                    print("请手动填写{formpath}，之后重新运行脚本".format(formpath=formpath))
+#                     exit()
 
         confirmList = self.getNoticeList()
         print(confirmList)
